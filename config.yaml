@@ -1,0 +1,11 @@
+study:
+  start: '2021-01-01'
+  end: '2025-12-31'
+  boards: ['科创板', '创业板']
+  code_prefixes: ['688', '300', '301']
+fetch:
+  interval_seconds: 2
+  retries: 3
+  timeout_seconds: 30
+crosscheck:
+  tolerance: 0.005

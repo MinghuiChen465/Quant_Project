@@ -1,0 +1,14 @@
+Verification date: 2026-11-13 (Europe/London)
+Python: 3.14.10
+Environment: quant_internship_week1/.venv (independent from original project)
+pip check: No broken requirements found.
+Python source parsing: passed for all project Python files.
+fetch_public.py --help: passed (CLI import check only; no live requests).
+run_week1.py: passed using bundled real raw CSV and Sina source text.
+IPO: 913; private placement: 538; convertible bond: 234.
+Independent IPO issue-price checks: 10 candidates, 10 matches.
+Validation: codes, boards, dates, provenance, duplicate IPOs, price-check status.
+Live API availability: not retested.
+Week 1 full acceptance: incomplete; see progress report for remaining fields and source checks.
+ZIP CRC check: passed; virtual environment and logs excluded.
+Extracted submission: successfully rebuilt from an unrelated temporary working directory in isolated Python mode.

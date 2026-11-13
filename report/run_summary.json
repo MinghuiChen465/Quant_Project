@@ -1,0 +1,12 @@
+{
+  "study_start": "2021-01-01",
+  "study_end": "2025-12-31",
+  "ipo": 913,
+  "private_placement": 538,
+  "convertible_bond": 234,
+  "crosscheck_candidates": 10,
+  "crosscheck_matches": 10,
+  "crosscheck_scope": "IPO发行价抽样；未完成再融资独立来源核验",
+  "validation": "passed",
+  "full_week1_acceptance": false
+}
