@@ -1,6 +1,4 @@
-# 中信建投量化实习：第一周独立提交版
-
-依据 `D:\Document\中信建投-量化实习项目.md` 中 Week1 任务，从原 `quant_internship` 提取并整理。本目录可独立运行，不需要原项目代码或原虚拟环境。代码包含中文说明。
+# 中信建投量化实习：Week 1
 
 ## 本周范围
 
@@ -16,7 +14,7 @@
 本机已经配置好本目录自己的 `.venv`。建议在 VS Code 中单独打开本文件夹：
 
 ```powershell
-cd D:\VS-code-projects\quant_internship_week1
+cd D:\Code\05_Internship_Projects\quant_internship_week1
 .\.venv\Scripts\python.exe run_week1.py
 ```
 
@@ -65,8 +63,5 @@ python -m venv .venv
 6. `data/field_dictionary.md`：字段、单位和缺失规则。
 7. `report/第一周进度汇报.md`：可汇报进度和待补事项。
 
-`analysis/`、`backtest/`、`events/`、`tests/` 是第一周要求的仓库骨架，不把后续周成果放进来。真实输入校验由 `run_week1.py` 执行。
+真实输入校验由 `run_week1.py` 执行。
 
-## 提交内容
-
-同级目录的 `quant_internship_week1_submission.zip` 包含代码、配置、原始证据、处理表和汇报文件，排除 `.venv`、日志和 Python 缓存；接收方按上述步骤重建环境即可运行。详细边界见本周进度汇报，不应把本提交称为第一周全部验收完成。

@@ -5,7 +5,7 @@ from core import path
 import yaml
 CONFIG=yaml.safe_load(path('config.yaml').read_text(encoding='utf-8'))
 
-# ??????????????????????????????????
+# 统一定增与可转债字段，输出再融资样本及年度覆盖统计。
 def normalize_refinancing():
     files=[path('data','raw','RPT_SEO_DETAIL.csv'),path('data','raw','RPT_BOND_CB_LIST.csv')]
     if not all(file.exists() for file in files): return
@@ -35,7 +35,7 @@ def normalize_refinancing():
     combined['year']=pd.to_datetime(combined.issue_date).dt.year
     combined.groupby(['year','board','instrument']).agg(n=('code','size'),proceeds=('proceeds','sum')).to_csv(path('report','refinancing_coverage.csv'),encoding='utf-8-sig')
 
-# ??????????????????????????
+# 从已缓存的新浪文本提取发行价，更新交叉核验结果。
 def crosscheck():
     import re
     file=path('data','processed','cross_validation.csv')
