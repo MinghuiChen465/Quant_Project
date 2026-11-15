@@ -1,0 +1,40 @@
+{
+  "source_url": "https://www.cninfo.com.cn/new/hisAnnouncement/query",
+  "retrieved_at": "2026-11-15T22:16:09.238991+00:00",
+  "body": {
+    "classifiedAnnouncements": null,
+    "totalSecurities": 0,
+    "totalAnnouncement": 1,
+    "totalRecordNum": 1,
+    "announcements": [
+      {
+        "id": null,
+        "secCode": "300776",
+        "secName": "<em>帝尔激光</em>",
+        "orgId": "gfbj0835053",
+        "announcementId": "1210642430",
+        "announcementTitle": "<em>武汉帝尔激光科技股份有限公司</em>2021年向不特定对象发行可转换公司债券信用评级报告",
+        "announcementTime": 1627920000000,
+        "adjunctUrl": "finalpage/2021-08-03/1210642430.PDF",
+        "adjunctSize": 13523,
+        "adjunctType": "PDF",
+        "storageTime": null,
+        "columnId": "09020202||160203||250301||251302",
+        "pageColumn": "SZCY",
+        "announcementType": "01010907||010112||010115||0129",
+        "associateAnnouncement": null,
+        "important": null,
+        "batchNum": null,
+        "announcementContent": "",
+        "orgName": null,
+        "tileSecName": "<em>帝尔激光</em>",
+        "shortTitle": "<em>武汉帝尔激光科技股份有限公司</em>2021年向不特定对象发行可转换公司债券信用评级报告",
+        "announcementTypeName": null,
+        "secNameList": null
+      }
+    ],
+    "categoryList": null,
+    "hasMore": false,
+    "totalpages": 0
+  }
+}

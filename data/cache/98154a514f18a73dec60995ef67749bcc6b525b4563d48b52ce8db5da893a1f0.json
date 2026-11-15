@@ -1,0 +1,40 @@
+{
+  "source_url": "https://www.cninfo.com.cn/new/hisAnnouncement/query",
+  "retrieved_at": "2026-11-15T22:11:09.153813+00:00",
+  "body": {
+    "classifiedAnnouncements": null,
+    "totalSecurities": 0,
+    "totalAnnouncement": 31,
+    "totalRecordNum": 31,
+    "announcements": [
+      {
+        "id": null,
+        "secCode": "688311",
+        "secName": "<em>盟升电子</em>",
+        "orgId": "9900041819",
+        "announcementId": "1217532494",
+        "announcementTitle": "第四届董事会第十二次会议决议公告",
+        "announcementTime": 1692028800000,
+        "adjunctUrl": "finalpage/2023-08-15/1217532494.PDF",
+        "adjunctSize": 143,
+        "adjunctType": "PDF",
+        "storageTime": null,
+        "columnId": "251302||253201",
+        "pageColumn": "SHKCB",
+        "announcementType": "01010503||010123||01239901",
+        "associateAnnouncement": null,
+        "important": null,
+        "batchNum": null,
+        "announcementContent": "",
+        "orgName": null,
+        "tileSecName": "<em>盟升电子</em>",
+        "shortTitle": "第四届董事会第十二次会议决议公告",
+        "announcementTypeName": null,
+        "secNameList": null
+      }
+    ],
+    "categoryList": null,
+    "hasMore": false,
+    "totalpages": 1
+  }
+}

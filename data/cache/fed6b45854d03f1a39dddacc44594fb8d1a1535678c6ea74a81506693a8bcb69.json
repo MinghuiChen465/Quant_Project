@@ -1,0 +1,40 @@
+{
+  "source_url": "https://www.cninfo.com.cn/new/hisAnnouncement/query",
+  "retrieved_at": "2026-11-15T22:16:45.223584+00:00",
+  "body": {
+    "classifiedAnnouncements": null,
+    "totalSecurities": 0,
+    "totalAnnouncement": 1,
+    "totalRecordNum": 1,
+    "announcements": [
+      {
+        "id": null,
+        "secCode": "300253",
+        "secName": "<em>卫宁健康</em>",
+        "orgId": "9900012530",
+        "announcementId": "1209393720",
+        "announcementTitle": "向不特定对象发行可转换公司债券网上中签率及优先配售结果公告",
+        "announcementTime": 1615893001000,
+        "adjunctUrl": "finalpage/2021-03-16/1209393720.PDF",
+        "adjunctSize": 844,
+        "adjunctType": "PDF",
+        "storageTime": null,
+        "columnId": "09020202||160201||160203||250301||251302||2705",
+        "pageColumn": "SZCY",
+        "announcementType": "01010503||010112||010115||01091101",
+        "associateAnnouncement": null,
+        "important": null,
+        "batchNum": null,
+        "announcementContent": "",
+        "orgName": null,
+        "tileSecName": "<em>卫宁健康</em>",
+        "shortTitle": "向不特定对象发行可转换公司债券网上中签率及优先配售结果公告",
+        "announcementTypeName": null,
+        "secNameList": null
+      }
+    ],
+    "categoryList": null,
+    "hasMore": false,
+    "totalpages": 0
+  }
+}

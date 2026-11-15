@@ -1,0 +1,40 @@
+{
+  "source_url": "https://www.cninfo.com.cn/new/hisAnnouncement/query",
+  "retrieved_at": "2026-11-15T22:16:19.197914+00:00",
+  "body": {
+    "classifiedAnnouncements": null,
+    "totalSecurities": 0,
+    "totalAnnouncement": 1,
+    "totalRecordNum": 1,
+    "announcements": [
+      {
+        "id": null,
+        "secCode": "300529",
+        "secName": "<em>健帆生物</em>",
+        "orgId": "9900023090",
+        "announcementId": "1210293366",
+        "announcementTitle": "国浩律师（深圳）事务所关于公司向不特定对象发行可转换公司债券之法律意见书",
+        "announcementTime": 1624204800000,
+        "adjunctUrl": "finalpage/2021-06-21/1210293366.PDF",
+        "adjunctSize": 4251,
+        "adjunctType": "PDF",
+        "storageTime": null,
+        "columnId": "09020202||160203||250301||251302",
+        "pageColumn": "SZCY",
+        "announcementType": "01010901||010112||010115||012903",
+        "associateAnnouncement": null,
+        "important": null,
+        "batchNum": null,
+        "announcementContent": "",
+        "orgName": null,
+        "tileSecName": "<em>健帆生物</em>",
+        "shortTitle": "国浩律师（深圳）事务所关于公司向不特定对象发行可转换公司债券之法律意见书",
+        "announcementTypeName": null,
+        "secNameList": null
+      }
+    ],
+    "categoryList": null,
+    "hasMore": false,
+    "totalpages": 0
+  }
+}

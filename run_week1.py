@@ -30,11 +30,32 @@ def build_ipo(config):
         df[col] = pd.to_numeric(df[col], errors='coerce')
     # IPO 上游募资额单位为亿元；定增同名原始字段已经是元，不能一概乘倍数。
     df['proceeds'] *= 1e8
-    df['issue_date'] = None  # 申购日不是已核实的法律发行日。
-    df['review_status'] = None  # 已上市样本不能推断全部申请项目的审核状态。
-    cols = list(mapping.values()) + ['board', 'issue_date', 'review_status', 'source_url', 'retrieved_at']
+    # 明确采用上游网上发行日期，独立于申购日字段保留，并标注核验层级。
+    df['online_issue_date'] = pd.to_datetime(raw.loc[keep, 'ONLINE_ISSUE_DATE'], errors='coerce').dt.strftime('%Y-%m-%d')
+    df['issue_date'] = None
+    df['issue_date_basis'] = None
+    df['issue_date_source_url'] = None
+    df['review_status'] = None
+    df['review_status_date'] = None
+    df['review_status_source_url'] = None
+    df['review_document_no'] = None
+    evidence = pd.read_csv(path('data/raw/ipo_official_evidence.csv'), dtype=str)
+    if evidence.code.duplicated().any():
+        raise ValueError('Duplicate IPO evidence code')
+    if not evidence.code.isin(df.code).all():
+        raise ValueError('IPO evidence contains unknown code')
+    fields = ['issue_date', 'issue_date_basis', 'issue_date_source_url', 'review_status',
+              'review_status_date', 'review_status_source_url', 'review_document_no']
+    for field in fields:
+        df[field] = df.code.map(evidence.set_index('code')[field])
+    cols = list(mapping.values()) + ['board', 'online_issue_date'] + fields + ['source_url', 'retrieved_at']
     df = df[cols].sort_values(['list_date', 'code'])
     df.to_csv(path('data/processed/ipo.csv'), index=False, encoding='utf-8-sig')
+    pending = df.loc[df.issue_date.isna() | df.review_status.isna(),
+                     ['code', 'name', 'board', 'list_date', 'online_issue_date']].copy()
+    pending['issue_date_pending'] = df.loc[pending.index, 'issue_date'].isna()
+    pending['review_status_pending'] = df.loc[pending.index, 'review_status'].isna()
+    pending.to_csv(path('report/ipo_official_pending.csv'), index=False, encoding='utf-8-sig')
     return df
 
 
@@ -55,6 +76,29 @@ def validate_samples(ipo, refinancing, checks, config):
                 raise ValueError(f'{name}: missing {field}')
     if ipo.code.duplicated().any():
         raise ValueError('Duplicate IPO code')
+    priced = refinancing.reference_price_20d.notna()
+    if not refinancing.loc[priced, 'reference_price_20d'].gt(0).all():
+        raise ValueError('Nonpositive refinancing reference price')
+    if not refinancing.loc[priced, 'reference_observations'].eq(20).all():
+        raise ValueError('Incomplete refinancing reference window')
+    if not (pd.to_datetime(refinancing.loc[priced, 'reference_window_end']) <
+            pd.to_datetime(refinancing.loc[priced, 'issue_date'])).all():
+        raise ValueError('Refinancing reference includes issue date or future data')
+    underlying = refinancing.underlying_close_on_issue.notna()
+    if not refinancing.loc[underlying, 'underlying_price_date'].eq(refinancing.loc[underlying, 'issue_date']).all():
+        raise ValueError('Underlying price date differs from issue date')
+    for value, source in [('reference_price_20d', 'reference_price_source_url'),
+                          ('underlying_close_on_issue', 'underlying_price_source_url'),
+                          ('announcement_date', 'announcement_source_url')]:
+        if refinancing.loc[refinancing[value].notna(), source].isna().any():
+            raise ValueError(f'Refinancing {value}: missing evidence source')
+    for field, source in [('issue_date', 'issue_date_source_url'), ('review_status', 'review_status_source_url')]:
+        present = ipo[field].notna()
+        if ipo.loc[present, source].isna().any():
+            raise ValueError(f'IPO {field}: missing independent evidence')
+    issued = ipo.issue_date.notna()
+    if (pd.to_datetime(ipo.loc[issued, 'issue_date']) > pd.to_datetime(ipo.loc[issued, 'list_date'])).any():
+        raise ValueError('IPO issue date follows listing date')
     # 重新计算核验结果，不因历史 CSV 标记 match 就直接相信它。
     if not checks.empty:
         a = pd.to_numeric(checks.value_a, errors='coerce')
@@ -94,13 +138,26 @@ def main():
             records.append(manifest(file, frame.to_dict('records'), date_col))
     for file in sorted(path('data/cache').glob('sina_*.txt')):
         records.append(manifest(file, [], ''))
+    for folder in ['refinancing_prices', 'refinancing_turnover', 'refinancing_documents', 'refinancing_pricing_windows']:
+        for file in sorted(path('data/cache', folder).glob('*.json')):
+            records.append(manifest(file, [], ''))
     write_csv(path('data/processed/data_manifest.csv'), records, ['file', 'rows', 'min_date', 'max_date', 'sha256'])
     summary = {
         'study_start': config['study']['start'], 'study_end': config['study']['end'],
         'ipo': len(ipo), 'private_placement': int(refinancing.instrument.eq('private_placement').sum()),
+        'ipo_online_issue_dates': int(ipo.online_issue_date.notna().sum()),
+        'ipo_official_issue_dates': int(ipo.issue_date.notna().sum()),
+        'ipo_official_review_statuses': int(ipo.review_status.notna().sum()),
+        'refinancing_reference_prices': int(refinancing.reference_price_20d.notna().sum()),
+        'refinancing_document_matched_announcements': int(refinancing.announcement_date.notna().sum()),
+        'convertible_underlying_issue_closes': int(refinancing.underlying_close_on_issue.notna().sum()),
+        'private_placement_reference_prices': int((refinancing.instrument.eq('private_placement') & refinancing.reference_price_20d.notna()).sum()),
+        'private_placement_pricing_date_vwaps': int((refinancing.instrument.eq('private_placement') & refinancing.pricing_date_reference_price_20d.notna()).sum()),
+        'private_placement_announcements': int((refinancing.instrument.eq('private_placement') & refinancing.announcement_date.notna()).sum()),
+        'convertible_announcements': int((refinancing.instrument.eq('convertible_bond') & refinancing.announcement_date.notna()).sum()),
         'convertible_bond': int(refinancing.instrument.eq('convertible_bond').sum()),
         'crosscheck_candidates': len(checks), 'crosscheck_matches': int(checks.status.eq('match').sum()),
-        'crosscheck_scope': 'IPO发行价抽样；未完成再融资独立来源核验',
+        'crosscheck_scope': 'IPO发行价抽样；再融资公告为自动正文匹配，人工逐条复核未完成',
         'validation': 'passed', 'full_week1_acceptance': False,
     }
     path('report/run_summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding='utf-8')

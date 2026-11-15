@@ -1,10 +1,12 @@
 # 公开数据抓取：先检查缓存及 robots，再限速请求，保存原始响应、来源和抓取时间。
 """Rate-limited, cached public-source acquisition with robots checks and provenance."""
 import argparse
+import base64
 from datetime import datetime, timezone
 import hashlib
 import json
 import time
+import threading
 from urllib.parse import urlsplit, urlencode
 from urllib.robotparser import RobotFileParser
 import requests
@@ -22,43 +24,68 @@ class PublicClient:
         self.session.headers['User-Agent']=AGENT
         self.last=0
         self.rules={}
+        self.request_lock = threading.Lock()
         self.timeout=CONFIG['fetch']['timeout_seconds']
         self.interval=CONFIG['fetch']['interval_seconds']
         self.retries=CONFIG['fetch']['retries']
         for folder in ['data/raw','data/processed','data/cache','report']:
             path(folder).mkdir(parents=True,exist_ok=True)
     # 先查本地响应缓存；未命中时检查访问规则、限速、重试并记录来源证据。
-    def get(self,url,params=None,text_mode=False):
+    def get(self,url,params=None,text_mode=False,method='GET',binary_mode=False):
         full=url+('?' + urlencode(params) if params else '')
         # URL、查询参数及文本/JSON 模式共同决定缓存键，避免不同请求误用同一缓存。
-        digest=hashlib.sha256((full+str(text_mode)).encode()).hexdigest()
+        cache_key = full + str(text_mode)
+        if method != 'GET':
+            cache_key = method + cache_key
+        if binary_mode:
+            cache_key = 'binary:' + cache_key
+        digest=hashlib.sha256(cache_key.encode()).hexdigest()
         target=path('data','cache',digest+'.json')
-        if target.exists(): return json.loads(target.read_text(encoding='utf-8'))
+        if binary_mode:
+            target = path('tmp', 'pdf_downloads', digest + '.json')
+        if target.exists():
+            try:
+                return json.loads(target.read_text(encoding='utf-8'))
+            except json.JSONDecodeError:
+                logger('fetch').warning('Incomplete cache will be fetched again: %s', target)
         origin='{0.scheme}://{0.netloc}'.format(urlsplit(url))
-        if origin not in self.rules:
-            response=self.session.get(origin+'/robots.txt',timeout=self.timeout)
-            if response.status_code==404: text=''
-            else:
-                response.raise_for_status()
-                text=response.text
-            rules=RobotFileParser()
-            rules.parse(text.splitlines())
-            self.rules[origin]=rules
+        with self.request_lock:
+            if origin not in self.rules:
+                time.sleep(max(0, self.interval - (time.monotonic() - self.last)))
+                self.last = time.monotonic()
+                response=self.session.get(origin+'/robots.txt',timeout=self.timeout)
+                if response.status_code==404: text=''
+                else:
+                    response.raise_for_status()
+                    text=response.text
+                rules=RobotFileParser()
+                rules.parse(text.splitlines())
+                self.rules[origin]=rules
         if not self.rules[origin].can_fetch(AGENT,full): raise PermissionError('robots disallows '+url)
         for attempt in range(self.retries):
             # 网络请求至少间隔两秒；缓存命中直接返回，不再次发请求。
-            time.sleep(max(0,self.interval-(time.monotonic()-self.last)))
-            self.last=time.monotonic()
+            with self.request_lock:
+                time.sleep(max(0,self.interval-(time.monotonic()-self.last)))
+                self.last=time.monotonic()
             try:
-                response=self.session.get(url,params=params,timeout=self.timeout)
+                if method == 'POST':
+                    response = self.session.post(url, data=params, timeout=self.timeout)
+                else:
+                    response=self.session.get(url,params=params,timeout=self.timeout)
+                if response.status_code == 501 and 'waf.tencent.com' in response.text:
+                    raise PermissionError('Tencent WAF rejected the request')
                 response.raise_for_status()
-                if text_mode:
+                if binary_mode:
+                    body = base64.b64encode(response.content).decode('ascii')
+                elif text_mode:
                     response.encoding=response.apparent_encoding
                     body=response.text
                 else: body=response.json()
                 record={'source_url':response.url,'retrieved_at':datetime.now(timezone.utc).isoformat(),'body':body}
                 target.parent.mkdir(parents=True,exist_ok=True)
-                target.write_text(json.dumps(record,ensure_ascii=False,indent=2),encoding='utf-8')
+                temporary = target.with_suffix('.tmp')
+                temporary.write_text(json.dumps(record,ensure_ascii=False,indent=2),encoding='utf-8')
+                temporary.replace(target)
                 return record
             except (requests.RequestException,ValueError):
                 if attempt==self.retries-1: raise

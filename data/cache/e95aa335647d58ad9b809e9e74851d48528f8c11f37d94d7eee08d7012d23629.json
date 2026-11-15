@@ -1,0 +1,14 @@
+{
+  "source_url": "https://www.cninfo.com.cn/new/hisAnnouncement/query",
+  "retrieved_at": "2026-11-15T22:16:11.199849+00:00",
+  "body": {
+    "classifiedAnnouncements": null,
+    "totalSecurities": 0,
+    "totalAnnouncement": 0,
+    "totalRecordNum": 0,
+    "announcements": null,
+    "categoryList": null,
+    "hasMore": false,
+    "totalpages": 0
+  }
+}

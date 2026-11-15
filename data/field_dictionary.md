@@ -6,18 +6,34 @@
 |---|---|---|
 | ipo.csv | code/name/board | 股票代码、简称、科创板或创业板；不是全市场股票池 |
 | ipo.csv | subscription_date/list_date | 申购日、上市日，不能混称发行日 |
-| ipo.csv | issue_date | 法律发行日尚未独立核实，留空 |
+| ipo.csv | online_issue_date | 东方财富原始 ONLINE_ISSUE_DATE，网上发行日期，保留独立字段；913条有值 |
+| ipo.csv | issue_date/issue_date_basis/issue_date_source_url | 采用官方披露明确的网上网下发行T日口径，逐条核验后填写，附公告链接；现已核实2条，其余留空 |
 | ipo.csv | issue_price/issue_pe | 发行价（元/股）、发行市盈率；缺失保持空值 |
 | ipo.csv | proceeds | 原 IPO TOTAL_RAISE_FUNDS 为亿元，乘 1e8 转元 |
 | ipo.csv | underwriter/industry | 上游承销商和行业；不是经过核验的历史行业成分或声誉排名 |
-| ipo.csv | status/review_status | status 保留来源状态；review_status 尚未取得独立审核状态数据，留空 |
+| ipo.csv | status/review_status | status 保留来源状态；review_status 采用证监会原始批复的同意注册结论，现2条；每条结论对应其批复时点 |
+| ipo.csv | review_status_date/review_status_source_url/review_document_no | 原始注册批复落款日、官方链接及文号；不等同当前项目动态或完整审核历程 |
+| ipo_official_evidence.csv | code及补充字段 | 人工逐条核实的公告、原始注册批复索引；后续向此表追加，运行入口会按代码一对一合并 |
 | refinancing_sample.csv | instrument | private_placement 为定增，convertible_bond 为可转债 |
 | refinancing_sample.csv | code/bond_code | 正股代码与债券代码；定增没有 bond_code |
 | refinancing_sample.csv | issue_date/issue_price | 来源发行日、发行价；转债发行价不是正股价格 |
 | refinancing_sample.csv | conversion_price/face_value | 初始转股价、债券面值，单位元；定增无对应字段 |
 | refinancing_sample.csv | proceeds | 定增原字段已是元；转债 ACTUAL_ISSUE_SCALE 为亿元，乘 1e8 |
 | refinancing_sample.csv | investor_type/underwriter | 发行对象、承销商，按上游原文保留 |
-| refinancing_sample.csv | announcement_date/reference_price_20d/discount | 原始公告日、前20日均价及折价仍缺失，不用申购日或最新行情补齐 |
+| refinancing_sample.csv | event_id | 定增采用原始FINANCE_CODE，转债采用债券代码标识发行事件 |
+| refinancing_sample.csv | announcement_date/announcement_type/announcement_source_url | 定增采用发行情况报告书披露日，转债采用发行公告披露日；巨潮索引定位后须通过正文代码、日期及价格匹配；不确定记录留空 |
+| refinancing_sample.csv | announcement_match_status/announcement_evidence_page | 发行人按官方索引证券代码匹配，再核对正文价格及日期或募资额；记录自动匹配状态及日期所在PDF页码，保留候选、歧义及不匹配状态供人工复核 |
+| refinancing_sample.csv | issue_date_evidence_status/date_review_note/date_review_source_url | 标记上游日期是否在正文出现，以及已发现的日期疑点；日期出现不等同已核实其法律含义。已知日期冲突记录暂缓折价输出 |
+| refinancing_sample.csv | reference_price_20d/reference_price_basis | 研究基准价，发行日前20个有成交交易日的未复权总成交额/总成交量；搜狐成交额万元转元，成交量手转股；仅20条有效记录齐备才计算 |
+| refinancing_sample.csv | reference_window_start/reference_window_end/reference_observations | 实际20日窗口起止与有效记录数，严格排除发行当日；停牌日不计入有成交日 |
+| refinancing_sample.csv | pricing_principle/pricing_reference_date | 保留上游定价原则原文；定价基准日从已匹配官方正文提取，并附独立来源 |
+| refinancing_sample.csv | official_reference_price_20d | 官方正文明确给出数值时才提取的定价基准日前20日均价；研究基准价单独保留；不通过发行底价除以80%反推 |
+| refinancing_sample.csv | pricing_date_reference_price_20d/pricing_date_window_start/pricing_date_window_end | 以公告提取的定价基准日为截止日，使用历史成交额与成交量重建的未复权20日VWAP；20个有效交易日齐备才填写，并保留行情来源；未处理公告要求的窗口内除权除息调整 |
+| refinancing_sample.csv | discount/discount_basis | 定增研究折价=1-发行价/发行日前20日未复权VWAP；负值表示溢价；缺价格基准留空。未作除权除息调整，不能视作公告法定折价口径 |
+| refinancing_sample.csv | underlying_close_on_issue/underlying_price_date | 转债发行当日未复权正股收盘价；仅精确匹配日期且有成交时填写，缺值留空 |
+| refinancing_sample.csv | underlying_price_crosscheck | 腾讯与搜狐同日收盘价的双源数值比对状态；有两源时使用0.011元容差；单源记录标not_checked |
+| refinancing_sample.csv | conversion_value_on_issue | 面值×发行日正股收盘价/初始转股价，单位元/张，任一必要字段缺失时留空 |
+| refinancing_sample.csv | *_source_url/*_retrieved_at | 补充价格各自保留接口链接与UTC采集时间；PDF正文缓存另附原始PDF SHA-256摘要 |
 | refinancing_sample.csv | status | issued_observed 表示观察到已发行记录，不表示全部申请和审核项目 |
 | 各样本表 | source_url/retrieved_at | 原始来源和抓取时间，不使用本次处理时间替换 |
 | cross_validation.csv | value_a/source_a/value_b/source_b | 东方财富与新浪的同一发行价字段；两个独立上游来源 |

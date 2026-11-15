@@ -1,0 +1,40 @@
+{
+  "source_url": "https://www.cninfo.com.cn/new/hisAnnouncement/query",
+  "retrieved_at": "2026-11-15T22:20:29.975152+00:00",
+  "body": {
+    "classifiedAnnouncements": null,
+    "totalSecurities": 0,
+    "totalAnnouncement": 1,
+    "totalRecordNum": 1,
+    "announcements": [
+      {
+        "id": null,
+        "secCode": "300682",
+        "secName": "朗新集团",
+        "orgId": "9900029863",
+        "announcementId": "1223192802",
+        "announcementTitle": "中信证券股份有限公司关于朗新科技集团股份有限公司公开<em>发行</em>可转换公司债券募集资金2024年度存放与使用<em>情况</em>的专项核查<em>报告</em>",
+        "announcementTime": 1745251200000,
+        "adjunctUrl": "finalpage/2025-04-22/1223192802.PDF",
+        "adjunctSize": 434,
+        "adjunctType": "PDF",
+        "storageTime": null,
+        "columnId": "09020202||160201||160203||250301||251302||2705",
+        "pageColumn": "SZCY",
+        "announcementType": "01010503||01010701||010109||010112||010115||010999||012315||0129",
+        "associateAnnouncement": null,
+        "important": null,
+        "batchNum": null,
+        "announcementContent": "",
+        "orgName": null,
+        "tileSecName": "朗新集团",
+        "shortTitle": "中信证券股份有限公司关于朗新科技集团股份有限公司公开<em>发行</em>可转换公司债券募集资金2024年度存放与使用<em>情况</em>的专项核查<em>报告</em>",
+        "announcementTypeName": null,
+        "secNameList": null
+      }
+    ],
+    "categoryList": null,
+    "hasMore": false,
+    "totalpages": 0
+  }
+}

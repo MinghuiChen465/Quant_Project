@@ -1,0 +1,6 @@
+﻿code,window,error
+300025,pp_41465,500 Server Error: Internal Server Error for url: https://q.stock.sohu.com/hisHq?code=cn_300025&start=20200812&end=20201110&stat=1&order=A&period=d&rt=json
+300551,pp_40942,500 Server Error: Internal Server Error for url: https://q.stock.sohu.com/hisHq?code=cn_300551&start=20200726&end=20201024&stat=1&order=A&period=d&rt=json
+300585,pp_40124,500 Server Error: Internal Server Error for url: https://q.stock.sohu.com/hisHq?code=cn_300585&start=20200605&end=20200903&stat=1&order=A&period=d&rt=json
+300649,pp_40092,500 Server Error: Internal Server Error for url: https://q.stock.sohu.com/hisHq?code=cn_300649&start=20200815&end=20201113&stat=1&order=A&period=d&rt=json
+300450,pp_39830,500 Server Error: Internal Server Error for url: https://q.stock.sohu.com/hisHq?code=cn_300450&start=20200617&end=20200915&stat=1&order=A&period=d&rt=json

@@ -1,0 +1,40 @@
+{
+  "source_url": "https://www.cninfo.com.cn/new/hisAnnouncement/query",
+  "retrieved_at": "2026-11-15T22:09:21.427487+00:00",
+  "body": {
+    "classifiedAnnouncements": null,
+    "totalSecurities": 0,
+    "totalAnnouncement": 31,
+    "totalRecordNum": 31,
+    "announcements": [
+      {
+        "id": null,
+        "secCode": "688800",
+        "secName": "<em>瑞可达</em>",
+        "orgId": "gfbj0831274",
+        "announcementId": "1224762267",
+        "announcementTitle": "对外投资管理制度",
+        "announcementTime": 1761753600000,
+        "adjunctUrl": "finalpage/2025-10-30/1224762267.PDF",
+        "adjunctSize": 263,
+        "adjunctType": "PDF",
+        "storageTime": null,
+        "columnId": "251302||251305||253201",
+        "pageColumn": "SHKCB",
+        "announcementType": "01010503||010123||013199",
+        "associateAnnouncement": null,
+        "important": null,
+        "batchNum": null,
+        "announcementContent": "",
+        "orgName": null,
+        "tileSecName": "<em>瑞可达</em>",
+        "shortTitle": "对外投资管理制度",
+        "announcementTypeName": null,
+        "secNameList": null
+      }
+    ],
+    "categoryList": null,
+    "hasMore": false,
+    "totalpages": 1
+  }
+}

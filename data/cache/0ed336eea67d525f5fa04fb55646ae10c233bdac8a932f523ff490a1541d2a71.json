@@ -1,0 +1,40 @@
+{
+  "source_url": "https://www.cninfo.com.cn/new/hisAnnouncement/query",
+  "retrieved_at": "2026-11-15T22:20:21.980418+00:00",
+  "body": {
+    "classifiedAnnouncements": null,
+    "totalSecurities": 0,
+    "totalAnnouncement": 1,
+    "totalRecordNum": 1,
+    "announcements": [
+      {
+        "id": null,
+        "secCode": "688536",
+        "secName": "思瑞浦",
+        "orgId": "9900032795",
+        "announcementId": "1224354677",
+        "announcementTitle": "思瑞浦微电子科技（苏州）股份有限公司<em>发行</em>可转换公司债券及支付现金购买资产并募集配套资金向特定对象<em>发行</em>股票<em>发行</em><em>情况</em><em>报告</em>书",
+        "announcementTime": 1753977600000,
+        "adjunctUrl": "finalpage/2025-08-01/1224354677.PDF",
+        "adjunctSize": 4608,
+        "adjunctType": "PDF",
+        "storageTime": null,
+        "columnId": "251302||253201||2705",
+        "pageColumn": "SHKCB",
+        "announcementType": "01010503||010123||010799||010999",
+        "associateAnnouncement": null,
+        "important": null,
+        "batchNum": null,
+        "announcementContent": "",
+        "orgName": null,
+        "tileSecName": "思瑞浦",
+        "shortTitle": "思瑞浦微电子科技（苏州）股份有限公司<em>发行</em>可转换公司债券及支付现金购买资产并募集配套资金向特定对象<em>发行</em>股票<em>发行</em><em>情况</em><em>报告</em>书",
+        "announcementTypeName": null,
+        "secNameList": null
+      }
+    ],
+    "categoryList": null,
+    "hasMore": false,
+    "totalpages": 0
+  }
+}

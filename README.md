@@ -55,6 +55,8 @@ python -m venv .venv
 
 ## 文件阅读顺序
 
+再融资字段补充可单独执行 `fetch_refinancing_announcements.py`、`fetch_refinancing_turnover.py`、`fetch_refinancing_prices.py`，然后运行 `run_week1.py` 定位公告候选。对无候选事件执行 `fetch_refinancing_announcements.py --precise`，再次运行入口后，执行 `fetch_refinancing_documents.py` 提取官方正文，再次运行入口合并。需要更早的公告定价基准日窗口时执行 `fetch_refinancing_turnover.py --pricing-dates`，最后重新运行入口。抓取命中缓存时支持断点续跑。待补记录见 `report/refinancing_enrichment_pending.csv`。研究基准价采用发行日前20个有成交交易日未复权VWAP，公告日期按发行报告/转债发行公告类型记录，详细定义见字段字典。
+
 1. `config.yaml`：本周研究区间和抓取参数。
 2. `core.py`：统一路径、日志、CSV 与版本摘要。
 3. `fetch_public.py`：原始数据获取与来源证据。
