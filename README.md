@@ -1,20 +1,18 @@
 # 中信建投量化实习：Week 1
 
-## 本周范围
+## 范围
 
 - 数据源选型矩阵、仓库骨架、独立配置、日志、统一路径与依赖。
 - IPO、定增、可转债公开清单抓取：限速、重试、缓存、robots 检查和来源时间记录。
 - 2021—2025 年科创板、创业板基础样本，IPO 发行价独立来源抽样核验。
 - 数据版本清单：文件、行数、日期范围、SHA-256。
 
-本版不包含后续周的 PIT 财报对齐、财务筛查、IPO 预测、回测或综合研究报告。
-
 ## 直接运行
 
 本机已经配置好本目录自己的 `.venv`。建议在 VS Code 中单独打开本文件夹：
 
 ```powershell
-cd D:\Code\05_Internship_Projects\quant_internship_week1
+cd "D:\Development\Code\05_Internship_Projects\quant_internship_week1"
 .\.venv\Scripts\python.exe run_week1.py
 ```
 
@@ -55,7 +53,7 @@ python -m venv .venv
 
 ## 文件阅读顺序
 
-再融资字段补充可单独执行 `fetch_refinancing_announcements.py`、`fetch_refinancing_turnover.py`、`fetch_refinancing_prices.py`，然后运行 `run_week1.py` 定位公告候选。对无候选事件执行 `fetch_refinancing_announcements.py --precise`，再次运行入口后，执行 `fetch_refinancing_documents.py` 提取官方正文，再次运行入口合并。需要更早的公告定价基准日窗口时执行 `fetch_refinancing_turnover.py --pricing-dates`，最后重新运行入口。抓取命中缓存时支持断点续跑。待补记录见 `report/refinancing_enrichment_pending.csv`。研究基准价采用发行日前20个有成交交易日未复权VWAP，公告日期按发行报告/转债发行公告类型记录，详细定义见字段字典。
+IPO官方字段补充依次执行 `fetch_ipo_official.py index`、`fetch_ipo_official.py cached-index`、`fetch_ipo_official.py documents`，最后运行 `run_week1.py` 合并。索引查询使用多证券精确筛选，正文按各字段保存来源、页码和摘录。注册结论优先保留已取得的证监会批复，其余可由法定披露IPO公告载明的注册文号与结论补充，明确批复日期与公告披露时点分别记录。
 
 1. `config.yaml`：本周研究区间和抓取参数。
 2. `core.py`：统一路径、日志、CSV 与版本摘要。

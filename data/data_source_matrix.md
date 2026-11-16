@@ -4,7 +4,7 @@
 
 | 类别 | 主来源及字段 | 独立核验来源 | 实际覆盖/缺口 |
 |---|---|---|---|
-| IPO | [东方财富](https://data.eastmoney.com/xg/xg/default_2.html)：价格、市盈率、募资、上市日、承销商 | [新浪发行资料](https://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_NewStock/stockid/301687.phtml) | 2021–2025目标板块913条；10条发行价核验一致，不代表全样本完全核验 |
+| IPO | [东方财富](https://data.eastmoney.com/xg/xg/default_2.html)：价格、市盈率、募资、上市日、承销商 | 新浪发行资料；巨潮官方IPO公告；证监会原始批复 | 913条官方发行T日及注册结论已补入，其中2条注册结论直取证监会批复网页、911条取自官方IPO公告；63条明确注册日期；10条发行价双源抽样一致，公告自动解析待人工复核 |
 | 定增 | [东方财富](https://data.eastmoney.com/other/gkzf.html)：发行日、价格、募资、对象 | 巨潮发行情况报告；搜狐历史成交额和成交量 | 538条均已计算发行日前20日研究VWAP；465条公告正文自动匹配；397条按公告定价基准日重建20日均价，其余待补 |
 | 可转债 | [东方财富](https://data.eastmoney.com/kzz/default.html)：发行日、初始转股价、面值、规模 | 巨潮发行公告；搜狐、腾讯历史行情 | 234条发行公告日及发行日正股收盘价已补入；23条收盘价双源一致，其余为单源记录；历史转股调整未齐 |
 | 行情与复权 | [AKShare官方行情文档](https://akshare.akfamily.xyz/data/stock/stock_quote.html)所列上游 | 交易所除权公告与独立行情来源 | 全历史未获取；不能用最新价格替代持有期标签 |
@@ -15,6 +15,6 @@
 
 ## 缺失与单位
 
-IPO主源TOTAL_RAISE_FUNDS单位亿元，转为元；SEO同名字段已经是元，不做相同倍数转换。可转债ACTUAL_ISSUE_SCALE为亿元。IPO申购日单列；913条ONLINE_ISSUE_DATE另存online_issue_date。新广益与强一股份的公告发行T日和证监会注册批复已逐条核实，来源见data/raw/ipo_official_evidence.csv，其余911条尚待官方核验。审核结论对应批复日期，完整审核历程待补。再融资公开完成记录不包括所有失败或撤回项目，不能据此研究审核通过概率。
+IPO主源TOTAL_RAISE_FUNDS单位亿元，转为元；SEO同名字段已经是元，不做相同倍数转换。可转债ACTUAL_ISSUE_SCALE为亿元。IPO申购日单列；913条ONLINE_ISSUE_DATE另存online_issue_date。913条issue_date采用官方IPO公告明确的网上发行T日，来源及注册结论见data/raw/ipo_official_evidence.csv。review_status_as_of记录公告证据披露时点，明确注册日期单列；发行日和状态可分别取自不同公告。再融资公开完成记录不包括所有失败或撤回项目，不能据此研究审核通过概率。
 
 第一周只建立样本清单，不生成破发标签、不训练预测模型，也不运行 PIT 回测。缺失市盈率、发行日、审核状态和基准价均保留为空；字段定义见 field_dictionary.md。研究范围固定为配置中的2021—2025年，后续扩展区间须另行验证样本覆盖。

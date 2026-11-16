@@ -45,9 +45,20 @@ def build_ipo(config):
     if not evidence.code.isin(df.code).all():
         raise ValueError('IPO evidence contains unknown code')
     fields = ['issue_date', 'issue_date_basis', 'issue_date_source_url', 'review_status',
-              'review_status_date', 'review_status_source_url', 'review_document_no']
+              'review_status_date', 'review_status_source_url', 'review_document_no',
+              'review_status_as_of', 'review_evidence_type', 'official_evidence_retrieved_at',
+              'official_evidence_sha256', 'issue_date_evidence_page', 'review_status_evidence_page',
+              'issue_date_evidence_quote', 'review_status_evidence_quote',
+              'issue_date_evidence_sha256', 'issue_date_evidence_retrieved_at', 'issue_date_document_title',
+              'review_status_evidence_sha256', 'review_status_evidence_retrieved_at', 'review_status_document_title']
     for field in fields:
+        if field not in evidence:
+            evidence[field] = None
         df[field] = df.code.map(evidence.set_index('code')[field])
+    original_decisions = df.review_status_source_url.fillna('').str.startswith('https://www.csrc.gov.cn/')
+    df.loc[original_decisions, 'review_evidence_type'] = 'csrc_registration_decision'
+    separate_sources = df.issue_date_source_url.fillna('').ne(df.review_status_source_url.fillna(''))
+    df.loc[separate_sources, ['official_evidence_sha256', 'official_evidence_retrieved_at']] = None
     cols = list(mapping.values()) + ['board', 'online_issue_date'] + fields + ['source_url', 'retrieved_at']
     df = df[cols].sort_values(['list_date', 'code'])
     df.to_csv(path('data/processed/ipo.csv'), index=False, encoding='utf-8-sig')
@@ -99,6 +110,12 @@ def validate_samples(ipo, refinancing, checks, config):
     issued = ipo.issue_date.notna()
     if (pd.to_datetime(ipo.loc[issued, 'issue_date']) > pd.to_datetime(ipo.loc[issued, 'list_date'])).any():
         raise ValueError('IPO issue date follows listing date')
+    dated = ipo.review_status_date.notna() & ipo.issue_date.notna()
+    if (pd.to_datetime(ipo.loc[dated, 'review_status_date']) > pd.to_datetime(ipo.loc[dated, 'issue_date'])).any():
+        raise ValueError('IPO registration decision follows issue date')
+    observed = ipo.review_status_as_of.notna() & ipo.review_status_date.notna()
+    if (pd.to_datetime(ipo.loc[observed, 'review_status_date']) > pd.to_datetime(ipo.loc[observed, 'review_status_as_of'])).any():
+        raise ValueError('IPO decision date follows evidence disclosure')
     # 重新计算核验结果，不因历史 CSV 标记 match 就直接相信它。
     if not checks.empty:
         a = pd.to_numeric(checks.value_a, errors='coerce')
@@ -138,7 +155,7 @@ def main():
             records.append(manifest(file, frame.to_dict('records'), date_col))
     for file in sorted(path('data/cache').glob('sina_*.txt')):
         records.append(manifest(file, [], ''))
-    for folder in ['refinancing_prices', 'refinancing_turnover', 'refinancing_documents', 'refinancing_pricing_windows']:
+    for folder in ['refinancing_prices', 'refinancing_turnover', 'refinancing_documents', 'refinancing_pricing_windows', 'ipo_documents']:
         for file in sorted(path('data/cache', folder).glob('*.json')):
             records.append(manifest(file, [], ''))
     write_csv(path('data/processed/data_manifest.csv'), records, ['file', 'rows', 'min_date', 'max_date', 'sha256'])
@@ -148,6 +165,9 @@ def main():
         'ipo_online_issue_dates': int(ipo.online_issue_date.notna().sum()),
         'ipo_official_issue_dates': int(ipo.issue_date.notna().sum()),
         'ipo_official_review_statuses': int(ipo.review_status.notna().sum()),
+        'ipo_csrc_original_decisions': int(ipo.review_evidence_type.eq('csrc_registration_decision').sum()),
+        'ipo_announcement_registration_evidence': int(ipo.review_evidence_type.isin(['official_issue_announcement', 'official_ipo_announcement']).sum()),
+        'ipo_explicit_registration_dates': int(ipo.review_status_date.notna().sum()),
         'refinancing_reference_prices': int(refinancing.reference_price_20d.notna().sum()),
         'refinancing_document_matched_announcements': int(refinancing.announcement_date.notna().sum()),
         'convertible_underlying_issue_closes': int(refinancing.underlying_close_on_issue.notna().sum()),
@@ -157,7 +177,7 @@ def main():
         'convertible_announcements': int((refinancing.instrument.eq('convertible_bond') & refinancing.announcement_date.notna()).sum()),
         'convertible_bond': int(refinancing.instrument.eq('convertible_bond').sum()),
         'crosscheck_candidates': len(checks), 'crosscheck_matches': int(checks.status.eq('match').sum()),
-        'crosscheck_scope': 'IPO发行价抽样；再融资公告为自动正文匹配，人工逐条复核未完成',
+        'crosscheck_scope': 'IPO发行价抽样；新增IPO公告证据与再融资公告为自动解析，待人工抽样复核',
         'validation': 'passed', 'full_week1_acceptance': False,
     }
     path('report/run_summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding='utf-8')

@@ -7,13 +7,16 @@
 | ipo.csv | code/name/board | 股票代码、简称、科创板或创业板；不是全市场股票池 |
 | ipo.csv | subscription_date/list_date | 申购日、上市日，不能混称发行日 |
 | ipo.csv | online_issue_date | 东方财富原始 ONLINE_ISSUE_DATE，网上发行日期，保留独立字段；913条有值 |
-| ipo.csv | issue_date/issue_date_basis/issue_date_source_url | 采用官方披露明确的网上网下发行T日口径，逐条核验后填写，附公告链接；现已核实2条，其余留空 |
+| ipo.csv | issue_date/issue_date_basis/issue_date_source_url | 采用官方IPO公告明确的网上发行T日口径，保留对应公告链接及日期原文；与上游网上发行日期对照，无法确认时留空 |
 | ipo.csv | issue_price/issue_pe | 发行价（元/股）、发行市盈率；缺失保持空值 |
 | ipo.csv | proceeds | 原 IPO TOTAL_RAISE_FUNDS 为亿元，乘 1e8 转元 |
 | ipo.csv | underwriter/industry | 上游承销商和行业；不是经过核验的历史行业成分或声誉排名 |
-| ipo.csv | status/review_status | status 保留来源状态；review_status 采用证监会原始批复的同意注册结论，现2条；每条结论对应其批复时点 |
-| ipo.csv | review_status_date/review_status_source_url/review_document_no | 原始注册批复落款日、官方链接及文号；不等同当前项目动态或完整审核历程 |
-| ipo_official_evidence.csv | code及补充字段 | 人工逐条核实的公告、原始注册批复索引；后续向此表追加，运行入口会按代码一对一合并 |
+| ipo.csv | status/review_status | status保留上游状态；review_status依据证监会原始批复或法定披露IPO公告明确载明的注册结论，当前值包括同意注册、予以注册和注册通过，保留原文证据 |
+| ipo.csv | review_status_date/review_status_source_url/review_document_no | 证据明确记载的注册日期、独立来源链接及文号；日期仅从原始批复或公告明确表述提取，未明确时留空，当前63条有值 |
+| ipo.csv | review_status_as_of/review_evidence_type | 公告证据的披露时点与证据类型；csrc_registration_decision为证监会原始批复，official_ipo_announcement为法定披露IPO公告，旧值official_issue_announcement表示发行公告；披露日单列保存 |
+| ipo.csv | issue_date_evidence_page/review_status_evidence_page及对应quote | 日期与注册结论各自所在PDF页码及原文摘录，便于人工抽样核对 |
+| ipo.csv | issue_date_evidence_sha256/review_status_evidence_sha256及对应retrieved_at | 各字段证据文件的SHA-256摘要及UTC获取时间；日期和状态可分别来自不同公告，按各自来源对应 |
+| ipo_official_evidence.csv | code及补充字段 | 独立证据索引，包含原有手工记录与本轮自动提取记录；保留来源类型、摘录与文号，待人工抽样复核；运行入口按代码一对一合并 |
 | refinancing_sample.csv | instrument | private_placement 为定增，convertible_bond 为可转债 |
 | refinancing_sample.csv | code/bond_code | 正股代码与债券代码；定增没有 bond_code |
 | refinancing_sample.csv | issue_date/issue_price | 来源发行日、发行价；转债发行价不是正股价格 |

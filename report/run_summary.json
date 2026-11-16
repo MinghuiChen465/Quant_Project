@@ -4,8 +4,11 @@
   "ipo": 913,
   "private_placement": 538,
   "ipo_online_issue_dates": 913,
-  "ipo_official_issue_dates": 2,
-  "ipo_official_review_statuses": 2,
+  "ipo_official_issue_dates": 913,
+  "ipo_official_review_statuses": 913,
+  "ipo_csrc_original_decisions": 2,
+  "ipo_announcement_registration_evidence": 911,
+  "ipo_explicit_registration_dates": 63,
   "refinancing_reference_prices": 772,
   "refinancing_document_matched_announcements": 699,
   "convertible_underlying_issue_closes": 234,
@@ -16,7 +19,7 @@
   "convertible_bond": 234,
   "crosscheck_candidates": 10,
   "crosscheck_matches": 10,
-  "crosscheck_scope": "IPO发行价抽样；再融资公告为自动正文匹配，人工逐条复核未完成",
+  "crosscheck_scope": "IPO发行价抽样；新增IPO公告证据与再融资公告为自动解析，待人工抽样复核",
   "validation": "passed",
   "full_week1_acceptance": false
 }
